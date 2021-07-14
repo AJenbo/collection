@@ -13,7 +13,6 @@ use Closure;
 use Generator;
 use Iterator;
 use loophp\collection\Iterator\IterableIterator;
-use loophp\fpt\FPT;
 
 /**
  * @immutable
@@ -33,24 +32,31 @@ final class Unpack extends AbstractOperation
      */
     public function __invoke(): Closure
     {
-        /** @psalm-var Closure(Iterator<int, array{0: TKey, 1: T}>): Generator<T, T> $pipe */
+        $toIterableIterator = static fn (iterable $value): Iterator => new IterableIterator($value);
+
+        $callbackForKeys =
+            /**
+             * @param NewTKey $initial
+             * @param T $value
+             *
+             * @return NewTKey
+             */
+            static fn ($initial, int $key, array $value) => $value[0];
+
+        $callbackForValues =
+            /**
+             * @param NewT $initial
+             * @param T $value
+             *
+             * @return NewT
+             */
+            static fn ($initial, int $key, array $value) => $value[1];
+
+        /** @var Closure(Iterator<TKey, T>): Generator<NewTKey, NewT> $pipe */
         $pipe = Pipe::of()(
-            Map::of()(
-                static fn (iterable $value): Iterator => new IterableIterator($value),
-                Chunk::of()(2)
-            ),
-            Unwrap::of(),
-            Associate::of()(
-                FPT::compose()(
-                    'current',
-                    FPT::arg()(2)
-                )
-            )(
-                FPT::compose()(
-                    'end',
-                    FPT::arg()(2)
-                )
-            )
+            MapN::of()($toIterableIterator, Chunk::of()(2)),
+            Flatten::of()(1),
+            Associate::of()($callbackForKeys)($callbackForValues)
         );
 
         // Point free style.
