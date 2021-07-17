@@ -18,7 +18,7 @@ use loophp\collection\Contract\Collection;
 interface Windowable
 {
     /**
-     * @return Collection<TKey, list<T>|T>
+     * @return Collection<TKey, list<T>>
      */
     public function window(int $size): Collection;
 }
