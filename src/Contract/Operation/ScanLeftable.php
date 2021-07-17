@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace loophp\collection\Contract\Operation;
 
+use Iterator;
 use loophp\collection\Contract\Collection;
 
 /**
@@ -18,9 +19,13 @@ use loophp\collection\Contract\Collection;
 interface ScanLeftable
 {
     /**
-     * @param T|null $initial
+     * @template V
+     * @template W
      *
-     * @return Collection<TKey, T>
+     * @param callable(W, T, TKey, Iterator<TKey, T>): V $callback
+     * @param W $initial
+     *
+     * @return Collection<int|TKey, V|W>
      */
     public function scanLeft(callable $callback, $initial = null): Collection;
 }

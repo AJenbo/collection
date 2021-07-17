@@ -26,26 +26,26 @@ final class ScanLeft1 extends AbstractOperation
     /**
      * @pure
      *
-     * @return Closure(callable((T|null), T, TKey, Iterator<TKey, T>): (T|null)):Closure (Iterator<TKey, T>): Generator<int|TKey, T|null>
+     * @return Closure(callable(T, T, TKey, Iterator<TKey, T>): T):Closure (Iterator<TKey, T>): Generator<int|TKey, T>
      */
     public function __invoke(): Closure
     {
         return
             /**
-             * @param callable(T|null, T, TKey, Iterator<TKey, T>):(T|null) $callback
+             * @param callable(T, T, TKey, Iterator<TKey, T>): T $callback
              *
-             * @return Closure(Iterator<TKey, T>): Generator<int|TKey, T|null>
+             * @return Closure(Iterator<TKey, T>): Generator<int|TKey, T>
              */
             static fn (callable $callback): Closure =>
                 /**
                  * @param Iterator<TKey, T> $iterator
                  *
-                 * @return Generator<int|TKey, T|null>
+                 * @return Generator<int|TKey, T>
                  */
                 static function (Iterator $iterator) use ($callback): Iterator {
                     $initial = $iterator->current();
 
-                    /** @var Closure(Iterator<TKey, T>):(Generator<int|TKey, T|null>) $pipe */
+                    /** @var Closure(Iterator<TKey, T>):(Generator<int|TKey, T>) $pipe */
                     $pipe = Pipe::of()(
                         Tail::of(),
                         Reduction::of()($callback)($initial),
