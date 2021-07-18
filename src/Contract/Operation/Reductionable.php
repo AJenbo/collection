@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace loophp\collection\Contract\Operation;
 
+use Iterator;
 use loophp\collection\Contract\Collection;
 
 /**
@@ -18,11 +19,16 @@ use loophp\collection\Contract\Collection;
 interface Reductionable
 {
     /**
-     * Reduce a collection of items through a given callback.
+     * Reduce a collection of items through a given callback and
+     * and yield each intermediary results.
      *
-     * @param mixed $initial
+     * @template V
+     * @template W
      *
-     * @return Collection<TKey, T>
+     * @param callable(V|W, T, TKey, Iterator<TKey, T>): W $callback
+     * @param V $initial
+     *
+     * @return Collection<TKey, V|W>
      */
     public function reduction(callable $callback, $initial = null): Collection;
 }
