@@ -19,13 +19,13 @@ function asyncMap_checkListInt(CollectionInterface $collection): void
 {
 }
 /**
- * @param CollectionInterface<int, non-empty-string> $collection
+ * @param CollectionInterface<int, string> $collection
  */
 function asyncMap_checkListString(CollectionInterface $collection): void
 {
 }
 /**
- * @param CollectionInterface<string, non-empty-string> $collection
+ * @param CollectionInterface<string, string> $collection
  */
 function asyncMap_checkMapString(CollectionInterface $collection): void
 {
@@ -56,11 +56,8 @@ asyncMap_checkMapClass(Collection::fromIterable(['foo' => 'bar', 'bar' => 'baz']
 // E.g: `numeric&string` or `non-empty-string`
 /** @psalm-suppress InvalidArgument @phpstan-ignore-next-line */
 asyncMap_checkListString(Collection::fromIterable([1, 2, 3])->asyncMap($toString));
-/** @psalm-suppress InvalidArgument */
 asyncMap_checkMapString(Collection::fromIterable(['foo' => 'bar', 'baz' => 'bar'])->asyncMap($appendBar));
-/** @psalm-suppress InvalidArgument */
 asyncMap_checkListString(Collection::fromIterable(['foo', 'bar'])->asyncMap($appendBar));
-/** @psalm-suppress InvalidArgument */
 asyncMap_checkListString(Collection::fromIterable([1, 2, 3])->asyncMap($square)->asyncMap($toString)->asyncMap($appendBar));
 
 // VALID failures due to usage with wrong types
